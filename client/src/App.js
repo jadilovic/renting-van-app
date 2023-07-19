@@ -4,7 +4,7 @@ const App = () => {
 	const [backendData, setBackendData] = useState([]);
 
 	useEffect(() => {
-		fetch('/api')
+		fetch('/api/mongodb')
 			.then((res) => res.json())
 			.then((data) => setBackendData(data))
 			.catch((error) => console.log(error));
@@ -14,8 +14,8 @@ const App = () => {
 		<div>
 			<h1>Data</h1>
 			{backendData.length > 0 ? (
-				backendData.map((name) => {
-					return <p key={name}>{name}</p>;
+				backendData.map((app) => {
+					return <p key={app.name}>{app.name}</p>;
 				})
 			) : (
 				<p>Loading...</p>

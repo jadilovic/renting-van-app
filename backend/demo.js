@@ -1,5 +1,27 @@
+const express = require('express');
 const { MongoClient } = require('mongodb');
 require('dotenv').config();
+
+const app = express();
+
+app.get('/api/mongodb', async (req, res) => {
+	const uri = mongoURI;
+
+	const client = new MongoClient(uri);
+	try {
+		await client.connect();
+		const arr = await findListings(client);
+		res.json(arr);
+	} catch (error) {
+		console.log(error);
+	} finally {
+		client.close();
+	}
+});
+
+app.listen(5000, () => {
+	console.log('Server is listening at port 5000');
+});
 
 const mongoURI = process.env.MONGODB_URI;
 
@@ -73,6 +95,10 @@ async function main() {
 		// await updateAllBihacListings(client);
 
 		// await deleteListingsScrapedBeforeDate(client, new Date('2019-02-16'));
+
+		// await findListings(client);
+
+		await printCheapestSuburbs(client, 'Australia', 'Sydney', 10);
 	} catch (error) {
 		console.log(error);
 	} finally {
@@ -81,6 +107,48 @@ async function main() {
 }
 
 main().catch((error) => console.log(error));
+
+async function printCheapestSuburbs(client, country, market, maxToPrint) {
+	const pipeline = [
+		{
+			$match: {
+				bedrooms: 1,
+				'address.country': country,
+				'address.market': market,
+				'address.suburb': {
+					$exists: 1,
+					$ne: '',
+				},
+				room_type: 'Entire home/apt',
+			},
+		},
+		{
+			$group: {
+				_id: '$address.suburb',
+				averagePrice: {
+					$avg: '$price',
+				},
+			},
+		},
+		{
+			$sort: {
+				averagePrice: 1,
+			},
+		},
+		{
+			$limit: maxToPrint,
+		},
+	];
+
+	const arrCursor = await client
+		.db('sample_airbnb')
+		.collection('listingsAndReviews')
+		.aggregate(pipeline);
+
+	await arrCursor.forEach((item) => {
+		console.log(`${item._id}: ${item.averagePrice}`);
+	});
+}
 
 async function deleteListingsScrapedBeforeDate(client, date) {
 	const result = await client
@@ -134,6 +202,22 @@ async function createListing(client, newListing) {
 
 	console.log(result);
 	console.log(`New listing created with inserted ID: ${result.insertedId}`);
+}
+
+async function findListings(client) {
+	const cursor = await client
+		.db('sample_airbnb')
+		.collection('listingsAndReviews')
+		.find({ number_of_reviews: { $gt: 400 } });
+
+	const results = await cursor.toArray();
+
+	if (results.length > 0) {
+		results.forEach((item) => console.log(`Name: ${item.name}`));
+	} else {
+		console.log('No listings found');
+	}
+	return results;
 }
 
 async function createMultipleListings(client, newListings) {
