@@ -1,4 +1,10 @@
 import { useEffect, useState } from 'react';
+import DependencyInversionPrinciple from './DependencyInversionPrinciple';
+import InterfaceSegregationPrinciple from './InterfaceSegregationPrinciple';
+import LiskovSubstitutionPrinciple from './LiskovSubstitutionPrinciple';
+import OpenClosedPrinciple from './OpenClosedPrinciple';
+import './App.css';
+import SingleResponsibilityPrinciple from './SingleResponsibilityPrinciple';
 
 const App = () => {
 	const [backendData, setBackendData] = useState([]);
@@ -20,6 +26,11 @@ const App = () => {
 			) : (
 				<p>Loading...</p>
 			)}
+			<SingleResponsibilityPrinciple />
+			<OpenClosedPrinciple />
+			<LiskovSubstitutionPrinciple />
+			<InterfaceSegregationPrinciple />
+			<DependencyInversionPrinciple />
 		</div>
 	);
 };

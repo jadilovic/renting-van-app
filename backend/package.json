@@ -5,10 +5,11 @@
 	"main": "src/index.ts",
 	"scripts": {
 		"start": "ts-node .",
-		"dev": "nodemon src/index.ts",
+		"dev": "nodemon src/types-annotations.ts",
 		"build": "tsc",
 		"typecheck": "tsc noEmit",
-		"test": "vitest"
+		"test": "vitest",
+		"mongodb-project": "nodemon demo.js"
 	},
 	"author": "ja",
 	"license": "ISC",

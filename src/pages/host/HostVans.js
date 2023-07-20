@@ -23,7 +23,7 @@ const HostVans = () => {
 			{vans.length > 0 ? (
 				vans.map((van) => {
 					return (
-						<Link to={'/host/vans/' + van.id} key={van.id}>
+						<Link to={van.id} key={van.id}>
 							<h3 className="van-btn">{van.name}</h3>
 						</Link>
 					);

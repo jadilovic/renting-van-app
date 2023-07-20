@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { getVans } from '../api';
 
 const Vans = () => {
 	const [vans, setVans] = useState([]);
@@ -7,9 +8,8 @@ const Vans = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	useEffect(() => {
-		const getVans = async () => {
-			const response = await fetch('/api/vans');
-			const data = await response.json();
+		const handleVans = async () => {
+			const data = await getVans();
 			if (searchParams.has('type')) {
 				setVans(
 					data.vans.filter((van) => van.type === searchParams.get('type'))
@@ -18,12 +18,10 @@ const Vans = () => {
 				setVans(data.vans);
 			}
 		};
-		getVans();
+		handleVans();
 
 		setTypeFilter(searchParams.get('type'));
 	}, [searchParams]);
-
-	console.log(typeFilter);
 
 	return (
 		<div className="vans-container">
@@ -37,16 +35,33 @@ const Vans = () => {
 				<Link to={'?type=rugged'}>Rugged</Link>
 				<Link to={'?type=simple'}>Simple</Link>
 				<Link to={'?type=luxury'}>Luxury</Link> */}
-				<button onClick={() => setSearchParams({})}>All</button>
-				<button onClick={() => setSearchParams({ type: 'rugged' })}>
+				<button
+					style={{
+						background: typeFilter === 'rugged' ? 'yellow' : '',
+					}}
+					onClick={() => setSearchParams({ type: 'rugged' })}
+				>
 					Rugged
 				</button>
-				<button onClick={() => setSearchParams({ type: 'simple' })}>
+				<button
+					style={{
+						background: typeFilter === 'simple' ? 'yellow' : '',
+					}}
+					onClick={() => setSearchParams({ type: 'simple' })}
+				>
 					Simple
 				</button>
-				<button onClick={() => setSearchParams({ type: 'luxury' })}>
+				<button
+					style={{
+						background: typeFilter === 'luxury' ? 'yellow' : '',
+					}}
+					onClick={() => setSearchParams({ type: 'luxury' })}
+				>
 					Luxury
 				</button>
+				{searchParams.has('type') ? (
+					<button onClick={() => setSearchParams({})}>Clear Filters</button>
+				) : null}
 			</nav>
 			{vans.length > 0 ? (
 				vans.map((van) => {
@@ -59,7 +74,11 @@ const Vans = () => {
 						// 		{van.name}
 						// 	</h3>
 						// </div>
-						<Link to={'/vans/' + van.id} key={van.id}>
+						<Link
+							to={van.id}
+							key={van.id}
+							state={{ search: searchParams.toString() }}
+						>
 							<div className="van-btn">
 								<h2>{van.name}</h2>
 								<h3>{van.type}</h3>

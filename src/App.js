@@ -14,6 +14,7 @@ import HostVanDetails from './pages/host/HostVanDetails';
 import Pricing from './pages/host/Pricing';
 import Photos from './pages/host/Photos';
 import HostVanDetailsLayout from './pages/host/HostVanDetailsLayout';
+import NotFound from './pages/NotFound';
 
 function App() {
 	return (
@@ -35,6 +36,7 @@ function App() {
 					<Route path="income" element={<Income />} />
 					<Route path="reviews" element={<Reviews />} />
 				</Route>
+				<Route path="*" element={<NotFound />} />
 			</Route>
 		</Routes>
 	);

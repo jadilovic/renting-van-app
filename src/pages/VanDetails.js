@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 
 const VanDetail = () => {
 	const params = useParams();
+	const location = useLocation();
 	const { vanId } = params;
 	const [van, setVan] = useState(null);
+	const search = location.state?.search || '';
 
 	useEffect(() => {
 		// const getVan = async () => {
@@ -24,6 +26,13 @@ const VanDetail = () => {
 		<>
 			{van ? (
 				<div>
+					<Link
+						style={{ fontSize: '2em' }}
+						to={`../?${search}`}
+						relative="path"
+					>
+						{`Back to ${search ? search.split('=').pop() : 'all'} vans`}
+					</Link>
 					<h1>Van</h1>
 					<p>{van.name}</p>
 				</div>
