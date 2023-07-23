@@ -1,7 +1,11 @@
 import express, { NextFunction, Request, Response } from 'express';
+import helmet from 'helmet';
+import routes from './routes';
 
 const app = express();
 app.use(express.json());
+
+app.use(helmet());
 
 app.get('/', (req: express.Request, res: express.Response) => {
 	res.send('Hello World');
@@ -20,17 +24,19 @@ const addPrice =
 	({ user }: { user: string }) =>
 	(req: Request, res: Response, next: NextFunction) => {
 		console.log(req.body);
-		// @ts-ignore
-		req.user = user;
+		// req.user = user;
 		req.body.price = 20;
+		res.locals.user = user;
 		next();
 	};
 
 app
 	.route('/different/:id/:authorId')
 	.get(addPrice({ user: 'Aki' }), (req: Request, res: Response) => {
-		// @ts-ignore
-		const { user } = req;
+		// const { user } = req;
+		console.log(res.locals.user);
+
+		const { user } = res.locals;
 		const { id, authorId } = req.params;
 		const { price } = req.body;
 		res.send(
@@ -43,7 +49,39 @@ app
 				' and user : ' +
 				user
 		);
-	})
+	});
+
+// app.get(
+// 	'/books/:bookId/:authId',
+// 	(
+// 		req: Request<{ bookId: string; authId: string }, {}, { user: string }, {}>,
+// 		res: Response
+// 	) => {
+// 		console.log(req.params.authId);
+// 		console.log(req.body.user);
+// 		console.log(req.query);
+
+// 		res.send('Books');
+// 	}
+// );
+
+routes(app);
+
+async function throwingError() {
+	throw new Error('Boom!');
+}
+
+app.get('/error', async (req, res) => {
+	try {
+		await throwingError();
+		res.status(200).send('It worked OK');
+	} catch (e) {
+		res.status(400).send('Something bad happened!');
+	}
+});
+
+app
+	.route('/test')
 	.post((req: Request, res: Response) => {
 		res.send('POST request');
 	})
