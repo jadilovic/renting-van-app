@@ -1,11 +1,14 @@
 import express, { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 import routes from './routes';
+import { connectToDatabase } from './db';
 
 const app = express();
 app.use(express.json());
 
 app.use(helmet());
+
+const PORT = process.env.PORT || 5000;
 
 app.get('/', (req: express.Request, res: express.Response) => {
 	res.send('Hello World');
@@ -93,6 +96,8 @@ app.all('/api/v1/all', (req: Request, res: Response) => {
 	res.redirect('/greeting');
 });
 
-app.listen(3000, () => {
-	console.log('Server is listening at port 3000');
+app.listen(PORT, () => {
+	console.log('Server is listening at port ' + PORT);
 });
+
+connectToDatabase();
