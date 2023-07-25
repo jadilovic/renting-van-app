@@ -1,12 +1,16 @@
 import express, { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 import routes from './routes';
-import { connectToDatabase } from './db';
+import { gamesRouter } from './routes/games.router';
+import { connectToMongoDB } from './services/database.service';
+// import { connectToDatabase } from './db';
 
 const app = express();
 app.use(express.json());
 
 app.use(helmet());
+
+app.use('/games', gamesRouter);
 
 const PORT = process.env.PORT || 5000;
 
@@ -96,8 +100,14 @@ app.all('/api/v1/all', (req: Request, res: Response) => {
 	res.redirect('/greeting');
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+	try {
+		await connectToMongoDB();
+		console.log('Connected to MongoDB');
+	} catch (error) {
+		console.log('Failed to connect to MongoDB', error);
+	}
 	console.log('Server is listening at port ' + PORT);
 });
 
-connectToDatabase();
+// connectToDatabase();

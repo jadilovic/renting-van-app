@@ -1,19 +1,6 @@
 import * as mongoDB from 'mongodb';
 import * as dotenv from 'dotenv';
 
-// require('dotenv').config();
-
-// mongodb.connect(
-// 	process.env.MONGODB_URI,
-// 	{ useUnifiedTopology: true },
-// 	async (err, client) => {
-// 		const db = client.db();
-// 		const results = await db.collection('pets').find().toArray();
-// 		console.log(results);
-// 		client.close();
-// 	}
-// );
-
 export async function connectToDatabase() {
 	dotenv.config();
 
@@ -34,4 +21,6 @@ export async function connectToDatabase() {
 	console.log(
 		`Successfully connected to database: ${db.databaseName} and collection: ${petsCollection.collectionName}`
 	);
+
+	return pets;
 }
