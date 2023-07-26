@@ -1,7 +1,7 @@
 // External Dependencies
 import express, { Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
-import { collections, connectToMongoDB } from '../services/database.service';
+import { collections } from '../services/database.service';
 import Game from '../models/games';
 
 // Global Config
@@ -11,12 +11,12 @@ gamesRouter.use(express.json());
 // GET
 gamesRouter.get('/', async (req: Request, res: Response) => {
 	try {
-		let priceFilter: number = 0;
-		if (req.query.price) {
-			priceFilter = Number(req.query.price);
-		}
+		let priceFilter: number = req.query.price ? Number(req.query.price) : 0;
+		let nameFilter: object = req.query.name ? { name: req.query.name } : {};
 		const games = await collections.games
-			?.find({ price: { $gte: priceFilter } })
+			?.find({ price: { $gte: priceFilter }, ...nameFilter })
+			.sort({ price: -1 })
+			.limit(2)
 			.toArray();
 		res.status(200).send(games);
 	} catch (error) {
