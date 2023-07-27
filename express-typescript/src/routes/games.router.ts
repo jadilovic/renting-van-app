@@ -14,9 +14,18 @@ gamesRouter.get('/', async (req: Request, res: Response) => {
 		let priceFilter: number = req.query.price ? Number(req.query.price) : 0;
 		let nameFilter: object = req.query.name ? { name: req.query.name } : {};
 		const games = await collections.games
-			?.find({ price: { $gte: priceFilter }, ...nameFilter })
+			// ?.find({ price: { $gte: priceFilter }, ...nameFilter })
+			// ?.find({ $or: [{ price: 13 }, { name: 'cuni' }, { category: 'boby' }] })
+			// ?.find({ $or: [{ price: { $gt: 24 } }, { price: { $lt: 13 } }] })
+			// ?.find({ price: { $in: [11, 16] } })
+			// ?.find({ genres: 'drama' })
+			// ?.find({ genres: ['horror'] })
+			// ?.find({ 'models.model': 4 })
+			?.find({})
+			// ?.updateMany({}, { $push: { genres: 'John' } })
+			// ?.find({ genres: { $all: ['horror', 'old'] } })
 			.sort({ price: -1 })
-			.limit(2)
+			.limit(20)
 			.toArray();
 		res.status(200).send(games);
 	} catch (error) {
@@ -64,9 +73,39 @@ gamesRouter.put('/:id', async (req: Request, res: Response) => {
 	try {
 		const updatedGame: Game = req.body as Game;
 		const query = { _id: new ObjectId(id) };
-		const result = await collections.games?.updateOne(query, {
-			$set: updatedGame,
-		});
+		// const result = await collections.games?.updateOne(query, {
+		// 	$set: updatedGame,
+		// });
+		// const result = await collections.games?.updateMany(
+		// 	{ name: 'aki-akiovic' },
+		// 	{
+		// 		$set: { name: 'aki-adilovic' },
+		// 	}
+		// );
+		// const result = await collections.games?.updateMany(
+		// 	{ price: 38 },
+		// 	{
+		// 		$inc: { price: -3 },
+		// 	}
+		// );
+		// const result = await collections.games?.updateOne(
+		// 	{ name: 'Fiat' },
+		// 	{
+		// 		$push: { genres: 'horror' },
+		// 	}
+		// );
+		// const result = await collections.games?.updateOne(
+		// 	{ name: 'Fiat3000' },
+		// 	{
+		// 		$pull: { genres: 'horror' },
+		// 	}
+		// );
+		const result = await collections.games?.updateOne(
+			{ name: 'Fiat5000' },
+			{
+				$push: { genres: ['bla', 'kla', 'swa'] },
+			}
+		);
 		result
 			? res.status(200).send('Updated game with id : ' + id)
 			: res.status(304).send('Game was not updated id : ' + id);
@@ -79,8 +118,17 @@ gamesRouter.put('/:id', async (req: Request, res: Response) => {
 gamesRouter.delete('/:id', async (req: Request, res: Response) => {
 	const id = req?.params?.id;
 	try {
-		const query = { _id: new ObjectId(id) };
-		const result = await collections.games?.deleteOne(query);
+		// const query = { _id: new ObjectId(id) };
+		// const result = await collections.games?.deleteOne(query);
+		// const result = await collections.games?.deleteOne({
+		// 	genres: { $all: ['horror', 'old'] },
+		// });
+		// const result = await collections.games?.deleteMany({
+		// 	genres: 'horror',
+		// });
+		const result = await collections.games?.deleteMany({
+			'models.name': 'caravan',
+		});
 		if (result && result.deletedCount) {
 			res.status(202).send('Successfully removed game with id : ' + id);
 		} else if (!result) {
@@ -90,6 +138,6 @@ gamesRouter.delete('/:id', async (req: Request, res: Response) => {
 		}
 	} catch (error) {
 		console.error(error);
-		res.status(400).send(error);
+		res.status(400).send('error ' + error);
 	}
 });
