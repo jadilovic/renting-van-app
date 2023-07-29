@@ -19,10 +19,10 @@ connectToMongo((err) => {
 
 app.get('/cars', (req, res) => {
 	let cars = [];
-	// db.collection('games')
 	const page = req.query.page || 0;
 	const itemsPerPage = 3;
-	db.collection('cars')
+	// db.collection('cars')
+	db.collection('games')
 		.find({})
 		// .sort({ 'First Name': 1 })
 		.skip(page * itemsPerPage)

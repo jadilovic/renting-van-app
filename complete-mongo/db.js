@@ -1,16 +1,15 @@
 const { MongoClient } = require('mongodb');
+require('dotenv').config();
 
 let dbConnection;
-
+let localUri = process.env.LOCAL_URI;
+let mongoDbUri = process.env.MONGODB_URI;
 module.exports = {
 	connectToMongo: (cb) => {
-		MongoClient.connect('mongodb://127.0.0.1:27017/dealership')
-			// MongoClient.connect(
-			// 	'mongodb+srv://adilovic79:V5jKr8hWGYRT1TkC@parts-app.6lakxck.mongodb.net/?retryWrites=true&w=majority'
-			// )
+		MongoClient.connect(mongoDbUri)
 			.then((client) => {
-				// dbConnection = client.db('gamesDB');
-				dbConnection = client.db();
+				dbConnection = client.db('gamesDB');
+				// dbConnection = client.db();
 				return cb();
 			})
 			.catch((err) => {
