@@ -1,37 +1,56 @@
 "use strict";
-var greeting = function () {
+let greeting = () => {
     console.log('Hellow World');
 };
 greeting();
-var hello;
-hello = function () {
+let hello;
+hello = () => {
     console.log('working function');
 };
-var add = function (a, b, c) {
-    if (c === void 0) { c = 10; }
+const add = (a, b, c = 10) => {
     console.log(a + b);
 };
 add(4, 6);
-var minus = function (a, b) {
+const minus = (a, b) => {
     return a - b;
 };
-var result = minus(45, 4);
-var person = function (name, age) {
-    console.log("Hello ".concat(name, " and ").concat(age));
+const result = minus(45, 4);
+const person = (name, age) => {
+    console.log(`Hello ${name} and ${age}`);
 };
-var people = function (name) {
-    console.log("There is ".concat(name.size, " and big ").concat(name.height));
+const people = (name) => {
+    console.log(`There is ${name.size} and big ${name.height}`);
 };
 person('Aki', 55);
 person('Bob', '45');
 people({ size: 4, height: 5 });
-var swimm;
-swimm = function (name, age) {
+let swimm;
+swimm = (name, age) => {
     console.log('Test ', name + ' and ' + age);
 };
 swimm('Aki', '337');
-var fly;
-fly = function (name, age) {
+let fly;
+fly = (name, age) => {
     return 'age and number';
 };
 console.log(fly('Aki', 22));
+// second function signature
+let calc;
+calc = (num1, num2, operation = 'add') => {
+    if (operation === 'add') {
+        return num1 + num2;
+    }
+    else {
+        return num1 - num2;
+    }
+};
+console.log(calc(4, 5));
+const calc2 = (num1, num2, operation = 'subtract') => {
+    return operation;
+};
+console.log(calc2(4, 6, 'add'));
+let logDetails;
+logDetails = (ninja) => {
+    console.log(`${ninja.name} and old : ${ninja.age}`);
+};
+logDetails({ name: 'Aki', age: 44 });

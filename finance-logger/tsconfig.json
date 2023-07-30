@@ -24,7 +24,7 @@
 		// "noLib": true,                                    /* Disable including any library files, including the default lib.d.ts. */
 		// "useDefineForClassFields": true,                  /* Emit ECMAScript-standard-compliant class fields. */
 		// "moduleDetection": "auto",                        /* Control what method is used to detect module-format JS files. */
-		"target": "es5",
+		"target": "es6",
 		"module": "es2015",
 		"moduleResolution": "node",
 

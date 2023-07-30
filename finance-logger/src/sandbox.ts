@@ -52,3 +52,35 @@ fly = (name: string, age: number) => {
 };
 
 console.log(fly('Aki', 22));
+
+// second function signature
+
+let calc: (a: number, b: number, c?: string) => number;
+
+calc = (num1: number, num2: number, operation: string = 'add') => {
+	if (operation === 'add') {
+		return num1 + num2;
+	} else {
+		return num1 - num2;
+	}
+};
+
+console.log(calc(4, 5));
+
+const calc2 = (num1: number, num2: number, operation: string = 'subtract') => {
+	return operation;
+};
+
+console.log(calc2(4, 6, 'add'));
+
+// example of function signature
+
+type personObj = { name: string; age: number };
+
+let logDetails: (obj: personObj) => void;
+
+logDetails = (ninja: personObj) => {
+	console.log(`${ninja.name} and old : ${ninja.age}`);
+};
+
+logDetails({ name: 'Aki', age: 44 });
