@@ -6,9 +6,9 @@ const NotFound = () => {
 
 	useEffect(() => {
 		setTimeout(() => {
-			navigation('/');
+			navigation('/', { state: 'Error not found' });
 		}, 1000);
-	});
+	}, [navigation]);
 
 	return (
 		<div>
